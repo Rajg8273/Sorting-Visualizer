@@ -91,6 +91,17 @@ async function bubbleSort(array) {
   return array;
 }
 
+async function swap(items, leftIndex, rightIndex, bars) {
+  var temp = items[leftIndex];
+  items[leftIndex] = items[rightIndex];
+  items[rightIndex] = temp;
+  bars[leftIndex].style.height = items[leftIndex] * heightFactor + "px";
+  bars[leftIndex].style.backgroundColor = "lightgreen";
+  bars[rightIndex].style.height = items[rightIndex] * heightFactor + "px";
+  bars[rightIndex].style.backgroundColor = "lightgreen";
+  await sleep(speedFactor);
+}
+
 async function InsertionSort(array) {
   let bars = document.getElementsByClassName("bar");
   for (let i = 1; i < array.length; i++) {
@@ -121,65 +132,6 @@ async function InsertionSort(array) {
   return array;
 }
 
-async function swap(items, leftIndex, rightIndex, bars) {
-  var temp = items[leftIndex];
-  items[leftIndex] = items[rightIndex];
-  items[rightIndex] = temp;
-  bars[leftIndex].style.height = items[leftIndex] * heightFactor + "px";
-  bars[leftIndex].style.backgroundColor = "lightgreen";
-  bars[rightIndex].style.height = items[rightIndex] * heightFactor + "px";
-  bars[rightIndex].style.backgroundColor = "lightgreen";
-  await sleep(speedFactor);
-}
-
-async function partition(items, left, right) {
-  let bars = document.getElementsByClassName("bar");
-  let pivotIndex = Math.floor((right + left) / 2);
-  var pivot = items[pivotIndex];
-  bars[pivotIndex].style.backgroundColor = "red";
-
-  for (let i = 0; i < bars.length; i++) {
-    if (i != pivotIndex) {
-      bars[i].style.backgroundColor = "aqua";
-    }
-  }
-
-  (i = left), (j = right);
-  while (i <= j) {
-    while (items[i] < pivot) {
-      i++;
-    }
-    while (items[j] > pivot) {
-      j--;
-    }
-    if (i <= j) {
-      await swap(items, i, j, bars);
-      i++;
-      j--;
-    }
-  }
-  return i;
-}
-
-async function quickSort(items, left, right) {
-  var index;
-  let bars = document.getElementsByClassName("bar");
-  if (items.length > 1) {
-    index = await partition(items, left, right);
-    if (left < index - 1) {
-      await quickSort(items, left, index - 1);
-    }
-    if (index < right) {
-      await quickSort(items, index, right);
-    }
-  }
-
-  for (let i = 0; i < bars.length; i++) {
-    bars[i].style.backgroundColor = "aqua";
-  }
-  return items;
-}
-
 sort_btn.addEventListener("click", function () {
   switch (algotouse) {
     case "bubble":
@@ -188,11 +140,9 @@ sort_btn.addEventListener("click", function () {
     case "insertion":
       InsertionSort(unsorted_array);
       break;
-    case "quick":
-      quickSort(unsorted_array, 0, unsorted_array.length - 1);
-      break;
     default:
       bubbleSort(unsorted_array);
       break;
   }
 });
+
